@@ -1,4 +1,4 @@
-package rbtree
+package sort
 
 import (
 	"cmp"
@@ -6,30 +6,17 @@ import (
 	"time"
 )
 
-// GenBFSList 生成一个随机的层序遍历的序列
-func GenBFSList(size, maxVal int) []int {
+// GenNumList 生成一个随机的层序遍历的序列
+func GenNumList(size, maxVal int) []int {
 	var (
 		rd  = rand.New(rand.NewSource(int64(time.Now().UnixNano())))
-		len = rd.Intn(size) + 1 // 序列长度
+		len = rd.Intn(size) + 1 // 序列长度)
 		res = make([]int, 0, len)
 	)
 
-	// 生成不重复的数字序列
-	uniq := make(map[int]struct{}, 0)
-	for i := 0; i < len; {
+	for range len {
 		num := rd.Intn(maxVal)
-		if num == 0 {
-			continue
-		}
-
-		_, ok := uniq[num]
-		if ok {
-			continue
-		}
-
 		res = append(res, num)
-		uniq[num] = struct{}{}
-		i++
 	}
 	return res
 }
@@ -40,6 +27,18 @@ func CheckIsAsc[T cmp.Ordered](arr []T) bool {
 			break
 		}
 		if arr[i] > arr[i+1] {
+			return false
+		}
+	}
+	return true
+}
+
+func CheckIsDesc[T cmp.Ordered](arr []T) bool {
+	for i := range arr {
+		if i == len(arr)-1 {
+			break
+		}
+		if arr[i] < arr[i+1] {
 			return false
 		}
 	}

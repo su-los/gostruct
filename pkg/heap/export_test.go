@@ -1,13 +1,12 @@
-package rbtree
+package heap
 
 import (
-	"cmp"
 	"math/rand"
 	"time"
 )
 
-// GenBFSList 生成一个随机的层序遍历的序列
-func GenBFSList(size, maxVal int) []int {
+// GenList 生成一个随机的层序遍历的序列
+func GenList(size, maxVal int) []int {
 	var (
 		rd  = rand.New(rand.NewSource(int64(time.Now().UnixNano())))
 		len = rd.Intn(size) + 1 // 序列长度
@@ -32,16 +31,4 @@ func GenBFSList(size, maxVal int) []int {
 		i++
 	}
 	return res
-}
-
-func CheckIsAsc[T cmp.Ordered](arr []T) bool {
-	for i := range arr {
-		if i == len(arr)-1 {
-			break
-		}
-		if arr[i] > arr[i+1] {
-			return false
-		}
-	}
-	return true
 }

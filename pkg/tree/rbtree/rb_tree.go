@@ -130,6 +130,133 @@ func (rb *RBTree[T]) Delete(val T) error {
 	return nil
 }
 
+// LevelOrder 层序遍历
+func (rb *RBTree[T]) LevelOrder() []T {
+	if rb.root == nil {
+		return []T{}
+	}
+
+	var (
+		res   = make([]T, 0)
+		queue = []*rbNode[T]{rb.root}
+	)
+	for len(queue) > 0 {
+		top := queue[0]
+		queue = queue[1:]
+		res = append(res, top.val)
+
+		if top.left != nil {
+			queue = append(queue, top.left)
+		}
+
+		if top.right != nil {
+			queue = append(queue, top.right)
+		}
+	}
+	return res
+}
+
+// PreOrder 前序遍历
+func (rb *RBTree[T]) PreOrder() []T {
+	if rb.root == nil {
+		return []T{}
+	}
+
+	var (
+		res   = make([]T, 0)
+		stack = []*rbNode[T]{rb.root}
+	)
+	for len(stack) > 0 {
+		top := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		res = append(res, top.val)
+		if top.right != nil {
+			stack = append(stack, top.right)
+		}
+
+		if top.left != nil {
+			stack = append(stack, top.left)
+		}
+	}
+	return res
+}
+
+// InOrder 中序遍历
+func (rb *RBTree[T]) InOrder() []T {
+	if rb.root == nil {
+		return []T{}
+	}
+
+	var (
+		cur   = rb.root
+		res   = make([]T, 0)
+		stack = make([]*rbNode[T], 0)
+	)
+	for len(stack) > 0 || cur != nil {
+		if cur != nil {
+			stack = append(stack, cur)
+			cur = cur.left
+			continue
+		}
+
+		cur = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		res = append(res, cur.val)
+		if cur.right != nil {
+			cur = cur.right
+		} else {
+			cur = nil
+		}
+	}
+	return res
+}
+
+// PostOrder 后序遍历
+func (rb *RBTree[T]) PostOrder() []T {
+	if rb.root == nil {
+		return []T{}
+	}
+
+	var (
+		cur, lastVisit *rbNode[T] = rb.root, nil
+		res                       = make([]T, 0)
+		stack                     = make([]*rbNode[T], 0)
+	)
+	for len(stack) > 0 || cur != nil {
+		if cur != nil {
+			stack = append(stack, cur)
+			cur = cur.left
+			continue
+		}
+		cur = stack[len(stack)-1]
+		if cur.right != nil && cur.right != lastVisit {
+			cur = cur.right
+		} else {
+			res = append(res, cur.val)
+			stack = stack[:len(stack)-1]
+			lastVisit = cur
+			cur = nil
+		}
+	}
+	return res
+}
+
+// Min 最小元素
+func (rb *RBTree[T]) Min() T {
+	if rb.root == nil {
+		return *new(T)
+	}
+	return rb.root.minSubNode().val
+}
+
+// Max 最大元素
+func (rb *RBTree[T]) Max() T {
+	if rb.root == nil {
+		return *new(T)
+	}
+	return rb.root.maxSubNode().val
+}
+
 // -------------------------------------------------------------------
 // Internal method
 // -------------------------------------------------------------------

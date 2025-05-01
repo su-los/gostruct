@@ -1,10 +1,12 @@
 package rbtree
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 	"time"
 
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 )
 
@@ -315,7 +317,7 @@ func TestFixInsertion(t *testing.T) {
 func TestInsert(t *testing.T) {
 	const count = 1000
 	for range count {
-		data := GenBFSList()
+		data := GenBFSList(1000, 1000)
 		rb := NewRBTree[int]()
 		for idx := range data {
 			require.NoError(t, rb.Insert(data[idx]))
@@ -514,7 +516,7 @@ func TestDelete(t *testing.T) {
 	const count = 1000
 	rd := rand.New(rand.NewSource(int64(time.Now().UnixNano())))
 	for range count {
-		data := GenBFSList()
+		data := GenBFSList(1000, 1000)
 		rb := NewRBTree[int]()
 		for idx := range data {
 			require.NoError(t, rb.Insert(data[idx]))
@@ -530,4 +532,104 @@ func TestDelete(t *testing.T) {
 		require.True(t, ok)
 		require.True(t, rb.IsValid())
 	}
+}
+
+func TestLevelOrder(t *testing.T) {
+	const testcnt = 100
+	for i := range testcnt {
+		data := GenBFSList(1000, 1000)
+		rb := NewRBTree[int]()
+		for idx := range data {
+			require.NoError(t, rb.Insert(data[idx]))
+		}
+
+		start := time.Now()
+		res := rb.LevelOrder()
+		require.Len(t, res, len(data))
+		fmt.Println("[INFO] Success testcase", i, "(len=", len(res), ") in", time.Since(start).Milliseconds(), "ms")
+	}
+}
+
+func TestInOrder(t *testing.T) {
+	const testcnt = 100
+	for i := range testcnt {
+		data := GenBFSList(1000, 10000)
+		rb := NewRBTree[int]()
+		for idx := range data {
+			require.NoError(t, rb.Insert(data[idx]))
+		}
+
+		start := time.Now()
+		res := rb.InOrder()
+		require.Len(t, res, len(data))
+		require.Equal(t, res[0], lo.Min(data))
+		require.True(t, CheckIsAsc(res))
+		fmt.Println("[INFO] Success testcase", i, "(len=", len(res), ") in", time.Since(start).Milliseconds(), "ms")
+	}
+}
+
+func TestPostOrder(t *testing.T) {
+	const testcnt = 100
+	for i := range testcnt {
+		data := GenBFSList(1000, 10000)
+		rb := NewRBTree[int]()
+		for idx := range data {
+			require.NoError(t, rb.Insert(data[idx]))
+		}
+
+		start := time.Now()
+		res := rb.PostOrder()
+		require.Len(t, res, len(data))
+		fmt.Println("[INFO] Success testcase", i, "(len=", len(res), ") in", time.Since(start).Milliseconds(), "ms")
+	}
+}
+
+func TestPreOrder(t *testing.T) {
+	const testcnt = 100
+	for i := range testcnt {
+		data := GenBFSList(1000, 10000)
+		rb := NewRBTree[int]()
+		for idx := range data {
+			require.NoError(t, rb.Insert(data[idx]))
+		}
+
+		start := time.Now()
+		res := rb.PreOrder()
+		require.Len(t, res, len(data))
+		require.Equal(t, res[0], rb.root.val)
+		fmt.Println("[INFO] Success testcase", i, "(len=", len(res), ") in", time.Since(start).Milliseconds(), "ms")
+	}
+}
+
+func TestMin(t *testing.T) {
+	const testcnt = 100
+	for i := range testcnt {
+		data := GenBFSList(1000, 10000)
+		rb := NewRBTree[int]()
+		for idx := range data {
+			require.NoError(t, rb.Insert(data[idx]))
+		}
+
+		start := time.Now()
+		res := rb.Min()
+		require.Equal(t, res, lo.Min(data))
+		fmt.Println("[INFO] Success testcase", i, "(len=", len(data), ") in", time.Since(start).Milliseconds(), "ms")
+	}
+}
+
+func TestMax(t *testing.T) {
+	const testcnt = 100
+	for i := range testcnt {
+		data := GenBFSList(1000, 1000)
+		rb := NewRBTree[int]()
+		for idx := range data {
+			require.NoError(t, rb.Insert(data[idx]))
+		}
+
+		start := time.Now()
+		res := rb.Max()
+		require.Equal(t, res, lo.Max(data))
+		fmt.Println("[INFO] Success testcase", i, "(len=", len(data), ") in", time.Since(start).Milliseconds(), "ms")
+	}
+
 }

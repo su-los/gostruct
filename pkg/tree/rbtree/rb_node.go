@@ -110,6 +110,15 @@ func (rb *rbNode[T]) minSubNode() *rbNode[T] {
 	return cur
 }
 
+// maxSubNode 求最大节点
+func (rb *rbNode[T]) maxSubNode() *rbNode[T] {
+	cur := rb
+	for cur.right != nil {
+		cur = cur.right
+	}
+	return cur
+}
+
 // getGrandparent 获取祖父节点
 func (rb *rbNode[T]) getGrandparent() *rbNode[T] {
 	if rb.parent != nil {
