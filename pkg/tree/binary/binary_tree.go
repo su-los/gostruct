@@ -76,6 +76,11 @@ func FromLevelOrder[T cmp.Ordered](data []T) *BinaryTree[T] {
 	return res
 }
 
+// Root 获取根节点.
+func (t *BinaryTree[T]) Root() *TreeNode[T] {
+	return t.root
+}
+
 // LevelOrder 层序遍历.
 func (t *BinaryTree[T]) LevelOrder() []T {
 	if t.root == nil {
